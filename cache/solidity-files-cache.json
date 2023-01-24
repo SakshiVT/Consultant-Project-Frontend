@@ -1,10 +1,85 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "D:\\Blockchain\\IPFS\\desoapp\\contracts\\PostApp.sol": {
-      "lastModificationDate": 1674573231687,
-      "contentHash": "06ea128a0bdaa39dd52109320e409d35",
+    "/Users/vinamravashishth/Documents/Masters' Union/Consultant-Project-Frontend/contracts/PostApp.sol": {
+      "lastModificationDate": 1674591557027,
+      "contentHash": "7574753a51461674ee54d2d2360e74df",
       "sourceName": "contracts/PostApp.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@chainlink/contracts/src/v0.8/AutomationCompatible.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.10"
+      ],
+      "artifacts": [
+        "SocialMedia"
+      ]
+    },
+    "/Users/vinamravashishth/Documents/Masters' Union/Consultant-Project-Frontend/node_modules/@chainlink/contracts/src/v0.8/AutomationCompatible.sol": {
+      "lastModificationDate": 1674587578486,
+      "contentHash": "c962c53a75d722542c83859d848edd5b",
+      "sourceName": "@chainlink/contracts/src/v0.8/AutomationCompatible.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./AutomationBase.sol",
+        "./interfaces/AutomationCompatibleInterface.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AutomationCompatible"
+      ]
+    },
+    "/Users/vinamravashishth/Documents/Masters' Union/Consultant-Project-Frontend/node_modules/@chainlink/contracts/src/v0.8/AutomationBase.sol": {
+      "lastModificationDate": 1674587578485,
+      "contentHash": "80067f44d8bddd615599f8d73b9726a5",
+      "sourceName": "@chainlink/contracts/src/v0.8/AutomationBase.sol",
       "solcConfig": {
         "version": "0.8.17",
         "settings": {
@@ -30,10 +105,45 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.10"
+        "^0.8.0"
       ],
       "artifacts": [
-        "SocialMedia"
+        "AutomationBase"
+      ]
+    },
+    "/Users/vinamravashishth/Documents/Masters' Union/Consultant-Project-Frontend/node_modules/@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol": {
+      "lastModificationDate": 1674587578486,
+      "contentHash": "c52969cee392918edbf23f914e01c0dc",
+      "sourceName": "@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AutomationCompatibleInterface"
       ]
     }
   }
