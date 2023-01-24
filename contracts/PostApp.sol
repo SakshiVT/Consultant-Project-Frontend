@@ -35,10 +35,8 @@ contract SocialMedia {
         owner = msg.sender;
     }
 
-    function createPost(string memory _content,string memory _imageURL, string memory _comment) public {
+    function createPost(string memory _content,string memory _imageURL) public {
         Post memory post = Post(idCount, msg.sender, _content, block.timestamp, false, _imageURL);
-        likes[idCount][msg.sender] = 10;
-        comments[idCount][msg.sender] = _comment;
 
         userPosts[msg.sender].push(post);
 
