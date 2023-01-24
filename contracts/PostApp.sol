@@ -2,41 +2,49 @@
 pragma solidity ^0.8.10;
 
 contract SocialMedia {
-
     struct Post {
-        uint id;
+        uint256 id;
         address author;
         string content;
-        uint timestamp;
+        uint256 timestamp;
         // mapping (address => bool) likes;
         // mapping (address => string) comments;
         bool isCensored;
         string imageURL;
     }
 
-    mapping (uint => mapping (address => uint)) public likes;
-    mapping (uint => mapping (address => string)) public comments;
+    mapping(uint256 => mapping(address => uint256)) public likes; // change to bool
+    mapping(uint256 => mapping(address => string)) public comments;
 
     uint256 public numPosts; // number of posts on the deso.
     mapping(uint256 => Post) public posts; // storse all posts on the deso.
-    mapping (address => Post[]) public userPosts; // stores all posts on the deso by a particular user.
-    mapping (address => uint) public postCount; // stores the no. of posts on the deso by a particular user.
-    mapping (address => bool) public isModerator; // stores whether a particular address is a moderator or not.
+    mapping(address => Post[]) public userPosts; // stores all posts on the deso by a particular user.
+    mapping(address => uint256) public postCount; // stores the no. of posts on the deso by a particular user.
+    mapping(address => bool) public isModerator; // stores whether a particular address is a moderator or not.
     address public owner; // stores the address of the owner of this contract.
-    uint idCount;
+    uint256 idCount;
 
-    event NewPost(address author, string content, uint timestamp);
+    event NewPost(address author, string content, uint256 timestamp);
     event NewLike(address postAuthor, address liker);
     event NewComment(address postAuthor, address commenter, string content);
-    event CensoredPost(address bostAuthor, uint postld);
-    event UncensoredPost(address postAuthor, uint postld);
-    
+    event CensoredPost(address bostAuthor, uint256 postld);
+    event UncensoredPost(address postAuthor, uint256 postld);
+
     constructor() {
         owner = msg.sender;
     }
 
-    function createPost(string memory _content,string memory _imageURL) public {
-        Post memory post = Post(idCount, msg.sender, _content, block.timestamp, false, _imageURL);
+    function createPost(string memory _content, string memory _imageURL)
+        public
+    {
+        Post memory post = Post(
+            idCount,
+            msg.sender,
+            _content,
+            block.timestamp,
+            false,
+            _imageURL
+        );
 
         userPosts[msg.sender].push(post);
 
@@ -47,7 +55,6 @@ contract SocialMedia {
 
         emit NewPost(msg.sender, _content, block.timestamp);
     }
-
 
     // function likePost(address postAuthor, uint postld) public {
     //     require(postld < postCount[postAuthor], "Invalid post ID.");
@@ -61,12 +68,12 @@ contract SocialMedia {
     //     userPosts [postAuthor][postld].comments[msg.sender] = content;
     //     emit NewComment(postAuthor, msg.sender, content);
     // }
-    
+
     function getPosts(address user) internal view returns (Post[] storage) {
         return userPosts[user];
     }
 
-    function getPostCount(address user) public view returns (uint) {
+    function getPostCount(address user) public view returns (uint256) {
         return postCount[user];
     }
 
@@ -74,26 +81,38 @@ contract SocialMedia {
         require(!isModerator[user], "User is already a moderator.");
         isModerator[user] = true;
     }
-    
+
     function removeModerator(address user) public onlyOwner {
         require(isModerator[user], "User is not a moderator.");
         isModerator[user] = false;
     }
-    
-    function censorPost(address postAuthor, uint postld) public onlyModerator {
+
+    function censorPost(address postAuthor, uint256 postld)
+        public
+        onlyModerator
+    {
         require(postld < postCount[postAuthor], "Invalid post ID.");
-        require(!userPosts[postAuthor][postld].isCensored, "Post is already censored.");
-        userPosts [postAuthor][postld].isCensored = true;
+        require(
+            !userPosts[postAuthor][postld].isCensored,
+            "Post is already censored."
+        );
+        userPosts[postAuthor][postld].isCensored = true;
         emit CensoredPost(postAuthor, postld);
     }
 
-    function uncensorPost(address postAuthor, uint postld) public
-    onlyModerator {
+    function uncensorPost(address postAuthor, uint256 postld)
+        public
+        onlyModerator
+    {
         require(postld < postCount[postAuthor], "Invalid post ID.");
-        require(userPosts[postAuthor][postld].isCensored, "Post is not censored.");
-        userPosts [postAuthor][postld].isCensored = false;
+        require(
+            userPosts[postAuthor][postld].isCensored,
+            "Post is not censored."
+        );
+        userPosts[postAuthor][postld].isCensored = false;
         emit UncensoredPost(postAuthor, postld);
     }
+
     // access control
     modifier onlyOwner() {
         require(msg.sender == owner, "Only the owner can perform this action");
@@ -101,9 +120,10 @@ contract SocialMedia {
     }
 
     modifier onlyModerator() {
-        require(isModerator[msg.sender], "Only moderators can perform this action.");
+        require(
+            isModerator[msg.sender],
+            "Only moderators can perform this action."
+        );
         _;
     }
-
-
 }
