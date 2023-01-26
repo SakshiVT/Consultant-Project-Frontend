@@ -55,18 +55,18 @@ export default function Navbar() {
                   >
                     Home
                   </a>
-                  <a
+                  <Link
                     href="#"
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
                   >
                     followers
-                  </a>
-                  <a
-                    href="#"
+                  </Link>
+                  <Link passHref
+                    href="/leaderboard"
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
                   >
                     Leaderbord
-                  </a>
+                  </Link>
                   <a
                     href="#"
                     className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
