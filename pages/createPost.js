@@ -3,7 +3,7 @@ import Form from '../components/Form/Form';
 const createPost = () => {
   return (
     <div>
-      <Form />
+      <Form /> 
     </div>
   )
 }
