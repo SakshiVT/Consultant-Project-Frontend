@@ -38,6 +38,8 @@ contract SocialMedia is AutomationCompatibleInterface {
     address public owner; // stores the address of the owner of this contract.
     uint256 idCount;
 
+    bytes public leaderData;
+
     event NewPost(
         uint256 postId,
         address author,
@@ -149,20 +151,19 @@ contract SocialMedia is AutomationCompatibleInterface {
             leaderScores[i] = scores[users[i]];
         }
 
-        // Insertion sort on leaderScores, simultaneously updating leaders.
-        for (uint256 i = 1; i < users.length; i++) {
-            uint256 key = leaderScores[i];
-            address key2 = leaders[i];
-            uint256 j = i - 1;
+        // Bubble sort for sorting the leaders array based on leaderScores.
+        for (uint256 i = 0; i < leaderScores.length; i++) {
+            for (uint256 j = 0; j < leaderScores.length - 1; j++) {
+                if (leaderScores[j] > leaderScores[j + 1]) {
+                    uint256 temp = leaderScores[j];
+                    leaderScores[j] = leaderScores[j + 1];
+                    leaderScores[j + 1] = temp;
 
-            while ((int256(j) >= 0) && (leaderScores[j] > key)) {
-                leaderScores[j + 1] = leaderScores[j];
-                leaders[j + 1] = leaders[j];
-                j--;
+                    address temper = leaders[j];
+                    leaders[j] = leaders[j + 1];
+                    leaders[j + 1] = temper;
+                }
             }
-
-            leaderScores[j + 1] = key;
-            leaders[j + 1] = key2;
         }
 
         upkeepNeeded = timePassed;
@@ -177,11 +178,13 @@ contract SocialMedia is AutomationCompatibleInterface {
             revert SocialMedia__UpkeepNotNeeded();
         }
 
+        leaderData = performData;
+
         // decode performData
-        address[] memory addresses = abi.decode(performData, (address[])); // this line has error.
+        address[] memory leaders = abi.decode(performData, (address[]));
 
         // assign decoded data to the leaderboard.
-        // leaderboard = addresses;
+        leaderboard = leaders;
     }
 
     // Gets score of a particular useraddress.
