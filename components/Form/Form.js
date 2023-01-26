@@ -6,6 +6,7 @@ import {TailSpin} from 'react-loader-spinner';
 import {ethers} from 'ethers';
 import {toast} from 'react-toastify';
 import desoContract from '../../artifacts/contracts/PostApp.sol/SocialMedia.json'
+const axios = require("axios");
 
 const FormState = createContext();
 
@@ -27,13 +28,53 @@ const Form = () => {
         })
     }
 
+    const textToIpfsUrl = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
+    let textToIpfsJson = {
+      pinataOptions: {
+          cidVersion: 1
+      },
+      pinataMetadata: {
+          name: "",
+      },
+      pinataContent: {
+      }
+    }; 
+
     const startPost = async (pinataUrlString) => {
 
         // e.preventDefault();
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
+        let captionUrlString = "";
 
-        console.log("caption in post contract -->"+ storyUrl)
+        console.log("signer "+signer);
+
+
+        if(storyUrl!='' && storyUrl!=undefined)
+        {
+            let address = await signer.getAddress();
+            console.log("Calling Post method for posting text caption");
+            textToIpfsJson.pinataMetadata.name = address+"_caption";
+            textToIpfsJson.pinataContent[`${address}`] =storyUrl;
+    
+            const result = await axios({
+                method:"post",
+                url:textToIpfsUrl,
+                data:textToIpfsJson,
+                headers: {
+                  "Content-Type": `application/json`,
+                  "pinata_api_key": `${process.env.NEXT_PUBLIC_IPFS_ID}`,
+                  "pinata_secret_api_key": `${process.env.NEXT_PUBLIC_IPFS_KEY}`,
+                },
+            })
+
+            console.log("Result for text Upload"+ JSON.stringify(result));
+            let IPFSHASH = result.data.IpfsHash;
+            captionUrlString = `https://gateway.pinata.cloud/ipfs/${IPFSHASH}`;
+        }
+
+        console.log("caption in post contract -->"+ storyUrl);
+
 
         if(form.story === "" ) {
           toast.warn("Story Field Is Empty");
@@ -50,7 +91,7 @@ const Form = () => {
           );
     
           const desoData = await contract.createPost(
-            storyUrl,
+            captionUrlString,
             pinataUrlString
           );
     
