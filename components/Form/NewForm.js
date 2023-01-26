@@ -174,7 +174,10 @@ export default function Form() {
     <FormState.Provider value={{ form, setForm,setLoading,uploadFiles, handleDescription, handleTitle, startPost, setUploaded }} >
 
       <form action="#" className="relative">
-        <div className="overflow-hidden rounded-lg border border-gray-300 shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
+        <div 
+        // className="overflow-hidden rounded-lg border border-gray-300 shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500"
+        style={{'margin':"15px 32px"}}
+        >
           <label htmlFor="title" className="sr-only">
             Title
           </label>
@@ -184,24 +187,24 @@ export default function Form() {
             id="title"
             onChange={handleTitle}
             value={form.title}
-            className="block w-full border-0 pt-2.5 text-lg font-medium placeholder-gray-500 focus:ring-0"
+            className="block w-full text-lg font-medium placeholder-gray-500"
+            style={{"outline":"none"}}
             placeholder="Title"
           />
           <label htmlFor="description" className="sr-only">
             Description
           </label>
           <textarea
-            rows={2}
+            rows={5}
             name="description"
             id="description"
             onChange={handleDescription}
-            // value={form.story}
             className="block w-full resize-none border-0 py-0 placeholder-gray-500 focus:ring-0 sm:text-sm"
             placeholder="Write a description..."
-            // defaultValue={''}
+            style={{"outline":"none"}}
+            defaultValue={''}
           />
-
-          {/* Spacer element to match the height of the toolbar */}
+          
           <div aria-hidden="true">
             <div className="py-2">
               <div className="h-9" />
@@ -216,9 +219,9 @@ export default function Form() {
         </div>
 
         <div className="absolute inset-x-px bottom-0">
-          {/* Actions: These are just examples to demonstrate the concept, replace/wire these up however makes sense for your project. */}
-
-          <div className="flex items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
+          <div
+          style={{"margin":"0 15px"}} 
+          className="flex items-center justify-between space-x-3 border-t border-gray-200 px-2 py-2 sm:px-3">
             <div className="flex">
               <input
                 type="file"
@@ -236,8 +239,11 @@ export default function Form() {
             <div className="flex-shrink-0">
                 <button 
                 onClick={uploadFiles}
+                style={{"marginRight":"8px"}}
                 className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >Upload Files to IPFS</button>
+                >
+                  Upload Files to IPFS
+                </button>
                 <button
                 type="submit"
                 onClick={(e)=>{startPost(e,pinataUrlString)}}
