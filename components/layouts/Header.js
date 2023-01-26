@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import HeaderLogo from './components/HeaderLogo'
 import HeaderNav from './components/HeaderNav'
 import HeaderRight from './components/HeaderRight'
+import Navbar from './components/Navbar';
 
 const Header = () => {
   return (
-    <HeaderWrapper>
-      <HeaderLogo />
-      <HeaderNav />
-      <HeaderRight />
-    </HeaderWrapper>
+  
+     
+      <Navbar/>
+    
   )
 };
 
@@ -20,5 +20,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-
+ {/* <HeaderLogo />
+      <HeaderNav />
+      <HeaderRight /> */}
 export default Header

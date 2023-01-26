@@ -104,8 +104,8 @@ const Form = () => {
         return false;
     }
 
-  return (
-      <FormState.Provider value={{form, setForm, FormHandler, setStoryUrl, startPost, setUploaded}} >
+  return ( <>
+   <FormState.Provider value={{form, setForm, FormHandler, setStoryUrl, startPost, setUploaded}} >
     <FormWrapper>
         <FormMain>
             {loading == true ?
@@ -129,6 +129,9 @@ const Form = () => {
         </FormMain>
     </FormWrapper>
       </FormState.Provider>
+      
+  </>
+     
   )
 }
 
