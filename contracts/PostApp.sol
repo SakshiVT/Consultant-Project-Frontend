@@ -19,34 +19,34 @@ contract SocialMedia is AutomationCompatibleInterface {
         string[] comment;
     }
 
-    mapping(uint256 => mapping(address => bool)) public likes; //to maintain likes of all posts
+    mapping(uint256 => mapping(address => bool)) likes; //to maintain likes of all posts
 
     address[] public users; // this array to be updated with the sign-up / sign-in feature.
     address[] public leaderboard; // this array to be updated by sorting the users by their scores.
 
-    uint256 public numPosts; // number of posts on the deso.
-    mapping(uint256 => Post) public posts; // stores all posts on the deso.
+    uint256 numPosts; // number of posts on the deso.
+    mapping(uint256 => Post) posts; // stores all posts on the deso.
 
-    mapping(address => Post[]) public userPosts; // stores all posts on the deso by a particular user.
-    mapping(address => uint256[]) public postCount; // stores the no. of posts on the deso by a particular user.
+    mapping(address => Post[]) userPosts; // stores all posts on the deso by a particular user.
+    mapping(address => uint256[]) postCount; // stores the no. of posts on the deso by a particular user.
 
     uint256 public immutable interval; // time after which the leaderboard needs to be reset.
     uint256 public lastTimestamp; // the last timestamp at which the leaderboard was reset.
 
     mapping(address => uint256) public scores; // stores the scores of all users.
 
-    address public owner; // stores the address of the owner of this contract.
+    address owner; // stores the address of the owner of this contract.
 
-    mapping(address => bool) public onboardedUser; // stores users that are onboarded.
+    mapping(address => bool) onboardedUser; // stores users that are onboarded.
 
     bytes public leaderData;
 
     // variables for scores
-    uint256 public newPostScore = 10;
-    uint256 public newLikeScore = 5;
-    uint256 public newCommentScore = 10;
-    uint256 public moderatorThreshold = 20;
-    uint256 public banUser = 2;
+    uint256 newPostScore = 10;
+    uint256 newLikeScore = 5;
+    uint256 newCommentScore = 10;
+    uint256 moderatorThreshold = 20;
+    uint256 banUser = 2;
 
     event NewPost(
         uint256 postId,
@@ -385,16 +385,8 @@ contract SocialMedia is AutomationCompatibleInterface {
         
     }
 
-    function getPostsByUser() internal view returns (Post[] storage) {
-        return userPosts[msg.sender];
-    }
-
     function getPostById(uint256 _postId) public view onlyOnboarded returns (Post memory, address[] memory, uint256 id, address[] memory, string[] memory) {
         return (posts[_postId], posts[_postId].likeAddress, posts[_postId].id, posts[_postId].commentAddress, posts[_postId].comment);
-    }
-
-    function getPostCount(address user) public view onlyOnboarded returns (uint256) {
-        return postCount[user].length;
     }
 
     function censorPost(address postAuthor, uint256 postId) public onlyOnboarded onlyModerator{
@@ -440,10 +432,7 @@ contract SocialMedia is AutomationCompatibleInterface {
     }
 
     modifier onlyModerator() {
-        require(
-            scores[msg.sender] >= moderatorThreshold,
-            "Only moderators can perform this action."
-        );
+        require(scores[msg.sender] >= moderatorThreshold, "Only moderators can perform this action.");
         _;
     }
 
