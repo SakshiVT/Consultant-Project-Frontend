@@ -37,6 +37,8 @@ contract SocialMedia is AutomationCompatibleInterface {
 
     address public owner; // stores the address of the owner of this contract.
 
+    mapping(address => bool) public onboardedUser; // stores users that are onboarded.
+
     bytes public leaderData;
 
     // variables for scores
@@ -123,10 +125,18 @@ contract SocialMedia is AutomationCompatibleInterface {
         leaderboard.push(_ad3);
     }
 
+    function userOnBoarding() public{
+        onboardedUser[msg.sender] = true;
+    }
+
+    function checkUserOnBoarded() public view returns(bool){
+        return onboardedUser[msg.sender];
+    }
+
     function createPost(
         string memory _content,
         string memory _imageURL
-    ) public {
+    ) public onlyOnboarded{
         uint256 time = block.timestamp;
         uint256 postId = numPosts;
         bool _isCensored = false;
@@ -218,6 +228,7 @@ contract SocialMedia is AutomationCompatibleInterface {
 
     function likePost(address _postAuthor, uint256 _postId)
         public
+        onlyOnboarded
         checkPostId(_postAuthor, _postId)
     {
         if (likes[_postId][msg.sender]) {
@@ -261,7 +272,7 @@ contract SocialMedia is AutomationCompatibleInterface {
         address _postAuthor,
         uint256 _postId,
         string memory _content
-    ) public checkPostId(_postAuthor, _postId) {
+    ) public onlyOnboarded checkPostId(_postAuthor, _postId) {
         for(uint i = 0; i< userPosts[_postAuthor].length; i++){
             if(userPosts[_postAuthor][i].id == _postId){
                 userPosts[_postAuthor][i].commentAddress.push(msg.sender);
@@ -284,6 +295,7 @@ contract SocialMedia is AutomationCompatibleInterface {
 
     function deleteComment(address _postAuthor, uint256 _postId)
         public
+        onlyOnboarded
         checkPostId(_postAuthor, _postId)
     {
         scores[_postAuthor] -= newCommentScore;
@@ -315,6 +327,7 @@ contract SocialMedia is AutomationCompatibleInterface {
 
     function deletePost(uint256 _postId)
         public
+        onlyOnboarded
         checkPostId(msg.sender, _postId)
     {
         for (uint i = 0; i < userPosts[msg.sender].length; i++) {
@@ -332,7 +345,7 @@ contract SocialMedia is AutomationCompatibleInterface {
         uint256 _postId,
         string memory _content,
         string memory _imageURL
-    ) public checkPostId(msg.sender, _postId) {
+    ) public onlyOnboarded checkPostId(msg.sender, _postId) {
         uint256 time = block.timestamp;
         for (uint256 i = 0; i < userPosts[msg.sender].length; i++) {
             if (userPosts[msg.sender][i].id == _postId) {
@@ -353,7 +366,7 @@ contract SocialMedia is AutomationCompatibleInterface {
         );
     }
 
-    function getAllPosts() public view returns(Post[] memory){
+    function getAllPosts() public view onlyOnboarded returns(Post[] memory){
         Post[] memory p = new Post[](numPosts);
         // address[][] memory add = new address[][];
         for(uint i=0 ; i<numPosts;i++){
@@ -376,15 +389,15 @@ contract SocialMedia is AutomationCompatibleInterface {
         return userPosts[msg.sender];
     }
 
-    function getPostById(uint256 _postId) public view returns (Post memory, address[] memory, uint256 id, address[] memory, string[] memory) {
+    function getPostById(uint256 _postId) public view onlyOnboarded returns (Post memory, address[] memory, uint256 id, address[] memory, string[] memory) {
         return (posts[_postId], posts[_postId].likeAddress, posts[_postId].id, posts[_postId].commentAddress, posts[_postId].comment);
     }
 
-    function getPostCount(address user) public view returns (uint256) {
+    function getPostCount(address user) public view onlyOnboarded returns (uint256) {
         return postCount[user].length;
     }
 
-    function censorPost(address postAuthor, uint256 postId) public onlyModerator{
+    function censorPost(address postAuthor, uint256 postId) public onlyOnboarded onlyModerator{
         require(
             !posts[postId].isCensored,
             "Post is already censored."
@@ -402,7 +415,7 @@ contract SocialMedia is AutomationCompatibleInterface {
         emit CensoredPost(msg.sender, postAuthor, postId, posts[postId].banCounter, posts[postId].isCensored);
     }
 
-    function uncensorPost(address postAuthor, uint256 postId) public onlyModerator{
+    function uncensorPost(address postAuthor, uint256 postId) public onlyOnboarded onlyModerator{
         require(
             posts[postId].isCensored,
             "Post is not censored."
@@ -436,6 +449,11 @@ contract SocialMedia is AutomationCompatibleInterface {
 
     modifier checkPostId(address _postAuthor, uint256 _postId) {
         require(posts[_postId].author == _postAuthor, "Invaild post!!");
+        _;
+    }
+
+    modifier onlyOnboarded{
+        require(onboardedUser[msg.sender], "You are not onboarded, use your wallet to signup!");
         _;
     }
 }
