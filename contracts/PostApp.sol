@@ -43,8 +43,8 @@ contract SocialMedia is AutomationCompatibleInterface {
     uint256 public newPostScore = 10;
     uint256 public newLikeScore = 5;
     uint256 public newCommentScore = 10;
-    uint256 public moderatorThreshold = 100;
-    uint256 public banUser = 5;
+    uint256 public moderatorThreshold = 20;
+    uint256 public banUser = 2;
 
     event NewPost(
         uint256 postId,
