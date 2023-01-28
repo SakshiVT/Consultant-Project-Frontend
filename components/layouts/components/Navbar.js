@@ -1,14 +1,10 @@
-import { Fragment } from 'react'
+
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { PlusIcon } from '@heroicons/react/20/solid'
 import Wallet from './Wallet'
 import { useRouter } from 'next/router'
-import { create } from 'domain'
 import Link from 'next/link'
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function Navbar() {
 
@@ -16,6 +12,8 @@ export default function Navbar() {
         e.preventDefault()
         router.push(href)
       }
+      const router = useRouter()
+
 
   return (
     <Disclosure as="nav" className="bg-white shadow">
@@ -76,16 +74,18 @@ export default function Navbar() {
                 </div>
               </div>
               <div className="flex items-center">
-                <div className="flex-shrink-0">
+                {(router.pathname !== '/createPost') ?
+                  <div className="flex-shrink-0">
                     <Link passHref href={"/createPost"}><button 
                     type="button"
                     className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
+                    >
                     <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                     <span>Create Post</span>
                   </button> </Link>
                   
                 </div>
+                :null}
                 <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
                   <button
                     type="button"
