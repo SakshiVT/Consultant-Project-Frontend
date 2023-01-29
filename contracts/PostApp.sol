@@ -76,11 +76,7 @@ contract SocialMedia is AutomationCompatibleInterface {
         uint256 postId,
         uint256 authorScore
     );
-    event DeletePost(
-        uint256 postId, 
-        address postAuthor, 
-        uint256 authorScore
-    );
+    event DeletePost(uint256 postId, address postAuthor, uint256 authorScore);
     event EditPost(
         uint256 postId,
         address author,
@@ -90,26 +86,21 @@ contract SocialMedia is AutomationCompatibleInterface {
     );
 
     event CensoredPost(
-        address moderator, 
-        address postAuthor, 
-        uint256 postld, 
-        uint256 banCounter, 
+        address moderator,
+        address postAuthor,
+        uint256 postld,
+        uint256 banCounter,
         bool isCensored
     );
     event UncensoredPost(
-        address moderator, 
-        address postAuthor, 
-        uint256 postld, 
-        uint256 banCounter, 
+        address moderator,
+        address postAuthor,
+        uint256 postld,
+        uint256 banCounter,
         bool isCensored
     );
 
-    constructor(
-        uint256 _interval,
-        address _ad1,
-        address _ad2,
-        address _ad3
-    ) {
+    constructor(uint256 _interval, address _ad1, address _ad2, address _ad3) {
         owner = msg.sender;
         interval = _interval;
         lastTimestamp = block.timestamp;
@@ -216,33 +207,39 @@ contract SocialMedia is AutomationCompatibleInterface {
         leaderboard = leaders;
     }
 
-    function likePost(address _postAuthor, uint256 _postId)
-        public
-        checkPostId(_postAuthor, _postId)
-    {
+    function likePost(
+        address _postAuthor,
+        uint256 _postId
+    ) public checkPostId(_postAuthor, _postId) {
         if (likes[_postId][msg.sender]) {
             likes[_postId][msg.sender] = false;
-            for(uint i=0; i<posts[_postId].likeAddress.length ; i++){
-                if(posts[_postId].likeAddress[i] == msg.sender){
+            for (uint i = 0; i < posts[_postId].likeAddress.length; i++) {
+                if (posts[_postId].likeAddress[i] == msg.sender) {
                     delete posts[_postId].likeAddress[i];
                     break;
                 }
             }
-            for(uint i = 0; i< userPosts[_postAuthor].length; i++){
-                for(uint j = 0; j< userPosts[_postAuthor][i].likeAddress.length;j++){
-                    if(userPosts[_postAuthor][i].likeAddress[j] == msg.sender){
+            for (uint i = 0; i < userPosts[_postAuthor].length; i++) {
+                for (
+                    uint j = 0;
+                    j < userPosts[_postAuthor][i].likeAddress.length;
+                    j++
+                ) {
+                    if (
+                        userPosts[_postAuthor][i].likeAddress[j] == msg.sender
+                    ) {
                         delete userPosts[_postAuthor][i].likeAddress[j];
                         break;
                     }
-                }               
+                }
             }
             scores[_postAuthor] -= newLikeScore;
         } else {
-            likes[_postId][msg.sender] = true;            
+            likes[_postId][msg.sender] = true;
             posts[_postId].likeAddress.push(msg.sender);
             scores[_postAuthor] += newLikeScore;
-            for(uint i = 0; i< userPosts[_postAuthor].length; i++){
-                if(userPosts[_postAuthor][i].id == _postId){
+            for (uint i = 0; i < userPosts[_postAuthor].length; i++) {
+                if (userPosts[_postAuthor][i].id == _postId) {
                     userPosts[_postAuthor][i].likeAddress.push(msg.sender);
                     break;
                 }
@@ -257,13 +254,29 @@ contract SocialMedia is AutomationCompatibleInterface {
         );
     }
 
+    //  mapping(address => Post[]) public userPosts;
+    //  mapping(uint256 => Post) public posts;
+
+    //  struct Post {
+    //     uint256 id;
+    //     address author;
+    //     string content;
+    //     uint256 timestamp;
+    //     uint256 banCounter;
+    //     bool isCensored;
+    //     string imageURL;
+    //     address[] likeAddress;
+    //     address[] commentAddress;
+    //     string[] comment;
+    // }
+
     function commentOnPost(
         address _postAuthor,
         uint256 _postId,
         string memory _content
     ) public checkPostId(_postAuthor, _postId) {
-        for(uint i = 0; i< userPosts[_postAuthor].length; i++){
-            if(userPosts[_postAuthor][i].id == _postId){
+        for (uint i = 0; i < userPosts[_postAuthor].length; i++) {
+            if (userPosts[_postAuthor][i].id == _postId) {
                 userPosts[_postAuthor][i].commentAddress.push(msg.sender);
                 userPosts[_postAuthor][i].comment.push(_content);
                 break;
@@ -272,7 +285,7 @@ contract SocialMedia is AutomationCompatibleInterface {
         posts[_postId].commentAddress.push(msg.sender);
         posts[_postId].comment.push(_content);
         scores[_postAuthor] += newCommentScore;
-        
+
         emit NewComment(
             _postAuthor,
             msg.sender,
@@ -282,22 +295,26 @@ contract SocialMedia is AutomationCompatibleInterface {
         );
     }
 
-    function deleteComment(address _postAuthor, uint256 _postId)
-        public
-        checkPostId(_postAuthor, _postId)
-    {
+    function deleteComment(
+        address _postAuthor,
+        uint256 _postId
+    ) public checkPostId(_postAuthor, _postId) {
         scores[_postAuthor] -= newCommentScore;
-        for(uint i=0; i<posts[_postId].commentAddress.length ; i++){
-            if(posts[_postId].commentAddress[i] == msg.sender){
+        for (uint i = 0; i < posts[_postId].commentAddress.length; i++) {
+            if (posts[_postId].commentAddress[i] == msg.sender) {
                 delete posts[_postId].commentAddress[i];
                 delete posts[_postId].comment[i];
                 break;
             }
         }
 
-        for(uint i = 0; i< userPosts[_postAuthor].length; i++){
-            for(uint j = 0; j< userPosts[_postAuthor][i].commentAddress.length;j++){
-                if(userPosts[_postAuthor][i].commentAddress[j] == msg.sender){
+        for (uint i = 0; i < userPosts[_postAuthor].length; i++) {
+            for (
+                uint j = 0;
+                j < userPosts[_postAuthor][i].commentAddress.length;
+                j++
+            ) {
+                if (userPosts[_postAuthor][i].commentAddress[j] == msg.sender) {
                     delete userPosts[_postAuthor][i].commentAddress[j];
                     delete userPosts[_postAuthor][i].comment[j];
                     break;
@@ -313,10 +330,9 @@ contract SocialMedia is AutomationCompatibleInterface {
         );
     }
 
-    function deletePost(uint256 _postId)
-        public
-        checkPostId(msg.sender, _postId)
-    {
+    function deletePost(
+        uint256 _postId
+    ) public checkPostId(msg.sender, _postId) {
         for (uint i = 0; i < userPosts[msg.sender].length; i++) {
             if (userPosts[msg.sender][i].id == _postId) {
                 delete userPosts[msg.sender][i];
@@ -344,19 +360,13 @@ contract SocialMedia is AutomationCompatibleInterface {
         posts[_postId].content = _content;
         posts[_postId].timestamp = time;
         posts[_postId].imageURL = _imageURL;
-        emit EditPost(
-            _postId,
-            msg.sender,
-            _content,
-            time,
-            _imageURL
-        );
+        emit EditPost(_postId, msg.sender, _content, time, _imageURL);
     }
 
-    function getAllPosts() public view returns(Post[] memory){
+    function getAllPosts() public view returns (Post[] memory) {
         Post[] memory p = new Post[](numPosts);
         // address[][] memory add = new address[][];
-        for(uint i=0 ; i<numPosts;i++){
+        for (uint i = 0; i < numPosts; i++) {
             p[i].id = posts[i].id;
             p[i].author = posts[i].author;
             p[i].content = posts[i].content;
@@ -365,59 +375,88 @@ contract SocialMedia is AutomationCompatibleInterface {
             p[i].isCensored = posts[i].isCensored;
             p[i].imageURL = posts[i].imageURL;
             p[i].likeAddress = posts[i].likeAddress;
-            p[i].commentAddress =posts[i].commentAddress;
-            p[i].comment =posts[i].comment;
+            p[i].commentAddress = posts[i].commentAddress;
+            p[i].comment = posts[i].comment;
         }
         return p;
-        
     }
 
     function getPostsByUser() internal view returns (Post[] storage) {
         return userPosts[msg.sender];
     }
 
-    function getPostById(uint256 _postId) public view returns (Post memory, address[] memory, uint256 id, address[] memory, string[] memory) {
-        return (posts[_postId], posts[_postId].likeAddress, posts[_postId].id, posts[_postId].commentAddress, posts[_postId].comment);
+    function getPostById(
+        uint256 _postId
+    )
+        public
+        view
+        returns (
+            Post memory,
+            address[] memory,
+            uint256 id,
+            address[] memory,
+            string[] memory
+        )
+    {
+        return (
+            posts[_postId],
+            posts[_postId].likeAddress,
+            posts[_postId].id,
+            posts[_postId].commentAddress,
+            posts[_postId].comment
+        );
     }
 
     function getPostCount(address user) public view returns (uint256) {
         return postCount[user].length;
     }
 
-    function censorPost(address postAuthor, uint256 postId) public onlyModerator{
-        require(
-            !posts[postId].isCensored,
-            "Post is already censored."
-        );
+    function censorPost(
+        address postAuthor,
+        uint256 postId
+    ) public onlyModerator {
+        require(!posts[postId].isCensored, "Post is already censored.");
         posts[postId].banCounter++;
-        for(uint i=0; i<userPosts[postAuthor].length; i++){
-            if(userPosts[postAuthor][i].id == postId){
+        for (uint i = 0; i < userPosts[postAuthor].length; i++) {
+            if (userPosts[postAuthor][i].id == postId) {
                 userPosts[postAuthor][i].banCounter++;
             }
-            if(posts[postId].banCounter > banUser){
+            if (posts[postId].banCounter > banUser) {
                 userPosts[postAuthor][i].isCensored = true;
                 posts[postId].isCensored = true;
             }
         }
-        emit CensoredPost(msg.sender, postAuthor, postId, posts[postId].banCounter, posts[postId].isCensored);
+        emit CensoredPost(
+            msg.sender,
+            postAuthor,
+            postId,
+            posts[postId].banCounter,
+            posts[postId].isCensored
+        );
     }
 
-    function uncensorPost(address postAuthor, uint256 postId) public onlyModerator{
-        require(
-            posts[postId].isCensored,
-            "Post is not censored."
-        );
+    function uncensorPost(
+        address postAuthor,
+        uint256 postId
+    ) public onlyModerator {
+        require(posts[postId].isCensored, "Post is not censored.");
         posts[postId].banCounter--;
-        for(uint i=0; i<userPosts[postAuthor].length; i++){
-            if(userPosts[postAuthor][i].id == postId){
+        for (uint i = 0; i < userPosts[postAuthor].length; i++) {
+            if (userPosts[postAuthor][i].id == postId) {
                 userPosts[postAuthor][i].banCounter--;
             }
-            if(posts[postId].banCounter <= banUser){
+            if (posts[postId].banCounter <= banUser) {
                 userPosts[postAuthor][i].isCensored = false;
                 posts[postId].isCensored = false;
             }
         }
-        emit UncensoredPost(msg.sender, postAuthor, postId,  posts[postId].banCounter, posts[postId].isCensored);
+        emit UncensoredPost(
+            msg.sender,
+            postAuthor,
+            postId,
+            posts[postId].banCounter,
+            posts[postId].isCensored
+        );
     }
 
     // access control
