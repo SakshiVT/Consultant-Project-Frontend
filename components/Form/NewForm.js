@@ -36,7 +36,10 @@ export default function Form() {
   }
 
   const startPost = async (e) => {
+
     e.preventDefault();
+
+    
 
     if (form.story !== "") {
       try {
@@ -46,21 +49,26 @@ export default function Form() {
       } catch (error) {
         toast.warn("Error uploading caption");
       }
+    }else{
+      setStoryUrl('BlankURL')
     }
 
   }
 
   const createPost= async()=>{
     setUploadLoading(true);
-    let captionUrlString = "";
+
+    let captionUrlString = "Blank URL";
 
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
     //we gather a local file from the API for this example, but you can gather the file from anywhere
 
     let filedata = new FormData();
 
-    filedata.append('file', image);
+    if(filedata){
 
+      filedata.append('file', image);
+      
     const result = await axios({
       method: "post",
       url: url,
@@ -71,12 +79,16 @@ export default function Form() {
         "pinata_secret_api_key": `${process.env.NEXT_PUBLIC_IPFS_KEY}`,
       },
     })
-
+    
     console.log("RESULT  " + JSON.stringify(result));
     let IPFSHASH = result.data.IpfsHash;
     pinataUrlString = `https://gateway.pinata.cloud/ipfs/${IPFSHASH}`;
-    setUploaded(true);
-    if(setUploaded){
+  }else{
+    pinataUrlString = 'Blank URL'
+  }
+    
+    // setUploaded(true);
+    // if(setUploaded){
 
       const textToIpfsUrl = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
       let textToIpfsJson = {
@@ -114,12 +126,14 @@ export default function Form() {
         console.log("Result for text Upload",JSON.stringify(result));
         let IPFSHASH = result.data.IpfsHash;
         captionUrlString = `https://gateway.pinata.cloud/ipfs/${IPFSHASH}`;
+      }else{
+        captionUrlString = "Blank URL";
       }
       
-      if (form.story === "") {
-        toast.warn("Story Field Is Empty");
-      } else if (pinataUrlString) {
-        setLoading(true);
+      // if (form.story === "") {
+      //   toast.warn("Story Field Is Empty");
+      // } else if (pinataUrlString) {
+      //   setLoading(true);
         
         const contract = new ethers.Contract(
           process.env.NEXT_PUBLIC_ADDRESS,
@@ -141,11 +155,8 @@ export default function Form() {
           toast.success("Post created Successfully!")
           Router.push('/')
         }
-      }
+      // }
       return false;
-    } else {
-      toast.warn("Unable to upload this file")
-    }
   }
 
   return (

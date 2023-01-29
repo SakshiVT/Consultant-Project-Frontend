@@ -1,3 +1,62 @@
+.likeCounter {
+    margin: 5px 200px 0 0 ;
+    color: #9ca3af;
+    font-size: 14px;
+    position: relative;
+    display: inline-block;
+}
+
+.likeCounter .likeCountertooltiptext{
+    visibility: hidden;
+    width: 120px;
+    background-color: #0f172a;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0; 
+    cursor: pointer;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 135%;
+   
+} 
+
+.likeCounter:hover .likeCountertooltiptext {
+    visibility: visible;
+}
+
+.likeHeart {
+    position: relative;
+    display: inline-block;
+}
+
+.likeHeart .likeHearttooltip{
+    visibility: hidden;
+    width: 120px;
+    font-size: smaller;
+    background-color: #0f172a;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0; 
+    cursor: pointer;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    right: 175%;
+   
+} 
+
+.likeHeart:hover .likeHearttooltip{
+    visibility: visible;
+}
+
+
 
 @tailwind base;
 @tailwind components;
@@ -5,3 +64,4 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Praise&display=swap');
+
