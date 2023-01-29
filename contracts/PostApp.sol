@@ -19,6 +19,12 @@ contract SocialMedia is AutomationCompatibleInterface {
         string[] comment;
     }
 
+    struct User{
+        address userAddress;
+        bool isOnboarded;
+        string pName;
+    }
+
     mapping(uint256 => mapping(address => bool)) likes; //to maintain likes of all posts
 
     address[] public users; // this array to be updated with the sign-up / sign-in feature.
@@ -37,7 +43,7 @@ contract SocialMedia is AutomationCompatibleInterface {
 
     address owner; // stores the address of the owner of this contract.
 
-    mapping(address => bool) onboardedUser; // stores users that are onboarded.
+    mapping(address => User) onboardedUser; // stores users that are onboarded.
 
     bytes public leaderData;
 
@@ -125,12 +131,12 @@ contract SocialMedia is AutomationCompatibleInterface {
         leaderboard.push(_ad3);
     }
 
-    function userOnBoarding() public{
-        onboardedUser[msg.sender] = true;
+    function userOnBoarding(string memory _pName) public{
+        onboardedUser[msg.sender] = User(msg.sender, true, _pName);
     }
 
     function checkUserOnBoarded() public view returns(bool){
-        return onboardedUser[msg.sender];
+        return onboardedUser[msg.sender].isOnboarded;
     }
 
     function createPost(
@@ -442,7 +448,7 @@ contract SocialMedia is AutomationCompatibleInterface {
     }
 
     modifier onlyOnboarded{
-        require(onboardedUser[msg.sender], "You are not onboarded, use your wallet to signup!");
+        require(onboardedUser[msg.sender].isOnboarded, "You are not onboarded, use your wallet to signup!");
         _;
     }
 }
