@@ -24,7 +24,7 @@ export default function Form() {
 
   useEffect(()=>{
     if(storyUrl){
-      test()
+      createPost()
     }
   },[storyUrl])
 
@@ -50,7 +50,7 @@ export default function Form() {
 
   }
 
-  const test= async()=>{
+  const createPost= async()=>{
     setUploadLoading(true);
     let captionUrlString = "";
 
@@ -131,7 +131,7 @@ export default function Form() {
           captionUrlString,
           pinataUrlString
         );
-        
+        console.log(desoData);
         const desoPostResult = await desoData.wait();
         console.log("Deso Result--->", desoPostResult)
         setAddress(desoData.to);

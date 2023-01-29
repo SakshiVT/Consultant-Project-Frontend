@@ -64,7 +64,7 @@ const Wallet = () => {
      onClick={connectWallet}
      >
         Connect Wallet
-      </button> :  <a href="#" className="group block flex-shrink-0">
+      </button> :  <a href="/profilePage" className="group block flex-shrink-0">
       <div className="flex items-center">
         <div>
           <img
