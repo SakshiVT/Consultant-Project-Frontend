@@ -254,22 +254,6 @@ contract SocialMedia is AutomationCompatibleInterface {
         );
     }
 
-    //  mapping(address => Post[]) public userPosts;
-    //  mapping(uint256 => Post) public posts;
-
-    //  struct Post {
-    //     uint256 id;
-    //     address author;
-    //     string content;
-    //     uint256 timestamp;
-    //     uint256 banCounter;
-    //     bool isCensored;
-    //     string imageURL;
-    //     address[] likeAddress;
-    //     address[] commentAddress;
-    //     string[] comment;
-    // }
-
     function commentOnPost(
         address _postAuthor,
         uint256 _postId,

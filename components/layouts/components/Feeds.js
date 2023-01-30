@@ -89,8 +89,8 @@ function Feeds(props) {
       signer
     );
 
-    const res = await contract.getPostById(props.id.toNumber());
-    console.log("⚡", res[4][1]);
+    await contract.getPostById(props.id.toNumber());
+    // console.log("⚡", res[4][1]);
     // console.log(props);
   };
 
@@ -290,10 +290,22 @@ function Feeds(props) {
 
           <div className='w-[70%] bg-[#ffffff29] h-[1px]  my-[10px]' />
 
-          <CommentTag
+          {/* {props?.comment?.forEach((comm) => {
+            return <CommentTag author='0xsasajnl' content='hi' />;
+          })} */}
+          {/* {console.log(props)} */}
+          {/* <CommentTag
             author='0x7Cd107085Fc2de05ea97608B33C329f45f0ad285'
-            content='Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex voluptates quas fuga nisi asperiores ipsum eligendi corporis hic blanditiis tempora?'
-          />
+            content='lorem50'
+          /> */}
+
+          {props.comment.map((comm, i) => (
+            <CommentTag
+              author={props.commentAddress[i]}
+              content={comm}
+              id={props.id}
+            />
+          ))}
         </div>
       </div>
 
