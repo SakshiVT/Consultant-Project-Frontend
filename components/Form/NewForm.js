@@ -58,16 +58,15 @@ export default function Form() {
   const createPost= async()=>{
     setUploadLoading(true);
 
-    let captionUrlString = "Blank URL";
+    let captionUrlString = "BlankURL";
 
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
     //we gather a local file from the API for this example, but you can gather the file from anywhere
 
     let filedata = new FormData();
 
-    if(filedata){
-
-      filedata.append('file', image);
+    filedata.append('file', image);
+    if(image){
       
     const result = await axios({
       method: "post",
@@ -84,7 +83,7 @@ export default function Form() {
     let IPFSHASH = result.data.IpfsHash;
     pinataUrlString = `https://gateway.pinata.cloud/ipfs/${IPFSHASH}`;
   }else{
-    pinataUrlString = 'Blank URL'
+    pinataUrlString = 'BlankURL'
   }
     
     // setUploaded(true);
@@ -107,7 +106,7 @@ export default function Form() {
       const signer = provider.getSigner();
 
 
-      if (storyUrl != '' && storyUrl != undefined) {
+      if (storyUrl != '' && storyUrl != undefined && storyUrl.toLowerCase() !== "blankurl")  {
         let address = await signer.getAddress();
         textToIpfsJson.pinataMetadata.name = address + "_caption";
         textToIpfsJson.pinataContent[`${address}`] = storyUrl;
@@ -127,7 +126,7 @@ export default function Form() {
         let IPFSHASH = result.data.IpfsHash;
         captionUrlString = `https://gateway.pinata.cloud/ipfs/${IPFSHASH}`;
       }else{
-        captionUrlString = "Blank URL";
+        captionUrlString = "BlankURL";
       }
       
       // if (form.story === "") {

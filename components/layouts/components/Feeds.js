@@ -63,7 +63,7 @@ function Feeds(props) {
 
     async function getContent(content) {
         try {
-            if (content) {
+            if (content && content.toLowerCase() !== "blankurl") {
                 const response = await fetch(content, {
                     method: 'GET'
                 })
@@ -76,7 +76,9 @@ function Feeds(props) {
     }
 
     getContent(props.content).then(res => {
-        setContent(nextBase64.decode(res[props.author]))
+        if(res && res[props.author].toLowerCase() !== "blankurl" ){
+            setContent(nextBase64.decode(res[props.author]))
+        }
     })
 
     const getScore = async () => {
@@ -150,7 +152,7 @@ function Feeds(props) {
                     </p>
                     : null}
                 {
-                    props.imageURL ?
+                    props.imageURL && props.imageURL.toLowerCase() !== "blankurl" ?
                         <div className="md:flex-shrink pr-6 pt-3">
                             <img className="rounded-lg w-full h-64" src={props.imageURL} alt="Post URL" />
                         </div> : null
