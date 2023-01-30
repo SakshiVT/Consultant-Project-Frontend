@@ -63,11 +63,12 @@ function Feeds(props) {
 
     async function getContent(content) {
         try {
-            if (content && content.toLowerCase() !== "blankurl") {
+            if (content) {
                 const response = await fetch(content, {
                     method: 'GET'
                 })
                 const data = await response.json();
+                console.log(JSON.stringify(data))
                 return data
             }
         } catch (err) {
@@ -75,11 +76,17 @@ function Feeds(props) {
         }
     }
 
-    getContent(props.content).then(res => {
-        if(res && res[props.author].toLowerCase() !== "blankurl" ){
+    if (props.content != 'BlankURL' && props.content != 'Blank URL'){
+        getContent(props.content).then(res => {
+        // console.log(props.author);
+        try{
             setContent(nextBase64.decode(res[props.author]))
+        } catch (err) {
+            setContent(null);
         }
+        
     })
+    }
 
     const getScore = async () => {
         if (address) {
@@ -152,7 +159,7 @@ function Feeds(props) {
                     </p>
                     : null}
                 {
-                    props.imageURL && props.imageURL.toLowerCase() !== "blankurl" ?
+                    props.imageURL != 'BlankURL' && props.imageURL != 'Blank URL'?
                         <div className="md:flex-shrink pr-6 pt-3">
                             <img className="rounded-lg w-full h-64" src={props.imageURL} alt="Post URL" />
                         </div> : null
